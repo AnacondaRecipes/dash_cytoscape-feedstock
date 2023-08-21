@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index f46278b..4087a8e 100755
+--- a/setup.py
++++ b/setup.py
+@@ -4,7 +4,7 @@ import os
+ from setuptools import setup, find_packages
+
+
+-with open('package.json') as f:
++with open('dash_cytoscape/package.json') as f:
+     package = json.load(f)
+
+ package_name = package["name"].replace(" ", "_").replace("-", "_")
