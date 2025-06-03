@@ -1,5 +1,5 @@
 {% set name = "dash_cytoscape" %}
-{% set version = "0.3.0" %}
+{% set version = "1.0.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,34 +7,44 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: a71ad4fe095570b71d4ad7c0d29199e9780c2e6796173d3b25fccc2cc58c855f
-  patches:
-    - 0001-point-to-correct-file-location.patch
+  sha256: a61019d2184d63a2b3b5c06d056d3b867a04223a674cc3c7cf900a561a9a59aa
+  #patches:
+  #  - 0001-point-to-correct-file-location.patch
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<38]
 
 requirements:
-  build:
-    - patch  # [unix]
-    - m2-patch  # [win]
+  #build:
+  #  - patch  # [unix]
+  #  - m2-patch  # [win]
   host:
-    - pip
-    - setuptools
-    - wheel
     - python
+    - pip
+    - wheel
+    - setuptools
   run:
     - dash
     - python
+  run_constrained:
+    # leaflet
+    - dash-leaflet >=1.0.16
 
+# Unable to run pytests.
+# https://dash.plotly.com/testing
+# Needs to run the pip install command to add test fixtures.
+# python -m pip install dash[testing]
 test:
-  requires:
-    - pip
   imports:
     - dash_cytoscape
+    - dash_cytoscape.utils
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+  requires:
+    - pip
 
 about:
   home: https://github.com/plotly/dash-cytoscape
